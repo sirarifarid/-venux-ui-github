@@ -3,6 +3,11 @@
   "private": true,
   "version": "1.0.0@beta",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/sirarifarid/venux-ui"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
