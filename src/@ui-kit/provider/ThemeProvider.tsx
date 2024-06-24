@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SxProps, ThemeProps } from "../types/@types";
+import { ThemeProps } from "../types/@types";
 import { safeCssObj } from "../../utils/safeObj";
 import { ThemeContext } from "../context/ThemeContext";
 import { Global, ThemeProvider } from "@emotion/react";
@@ -27,6 +27,7 @@ const VenuxThemeProvider = ({
             button: {
               border: "none",
               outline: "none",
+              cursor: "pointer",
             },
             input: {
               border: "none",

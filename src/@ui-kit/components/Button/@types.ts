@@ -10,7 +10,8 @@ export type ButtonProps = T_DEFINED_STYLED &
   T_DEFAULT_BUTTON_PROPS & {
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
+    rippleDuration?: number;
     variant?: "default" | "outlined" | "ghost" | (string & {});
-    color?: keyof typeof _defaultColors;
+    colorScheme?: keyof typeof _defaultColors;
     size?: T_STRING_GENER<"xs" | "sm" | "md" | "lg" | "xl">;
   };

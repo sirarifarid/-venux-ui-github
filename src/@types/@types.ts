@@ -13,14 +13,12 @@ export type T_DEFAULT_BUTTON_PROPS = T_ACTION_PROPS & {
   ripple?: boolean;
   isLoading?: boolean;
   rippleColor?: string;
-  rippleRenderer?: (props: RipplesAttr) => JSX.Element;
+  rippleRenderer?: (props: Partial<RipplesAttr>) => JSX.Element;
 };
 
 export type T_ACTION_PROPS = {
   loadingSx?: SxProps;
   disabledSx?: SxProps;
 };
-
-
 
 export type T_STYLED_THEME<T> = T & { theme?: ThemeProps };

@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
-import { safeCssObj, safeCssObjOn, safeObj } from "../../../utils/safeObj";
+import { safeCssObj, safeCssObjOn } from "../../../utils/safeObj";
 import { SxProps } from "../../types/@types";
 import { ButtonProps } from "./@types";
 import { _defaultColors } from "../../provider/_default";
 import { T_STYLED_THEME } from "../../../@types/@types";
 import { unit } from "../../utils/units";
+import { alpha } from "../../utils/alpha";
 
 const ButtonWrapper_ = styled.button<T_STYLED_THEME<ButtonProps>>(
   // default
@@ -24,13 +25,14 @@ const ButtonWrapper_ = styled.button<T_STYLED_THEME<ButtonProps>>(
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          transition:
-            "color, background-color, border-color, text-decoration-color, fill, stroke 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+          transitionProperty:
+            "color, background-color, border-color, text-decoration-color, fill, stroke ",
+          transitionBehavior: "cubic-bezier(0.4, 0, 0.2, 1)",
+          transitionDuration: "200ms",
           overflow: "hidden",
           position: "relative",
           gap: "0.5rem",
           fontWeight: 600,
-          color: "#ffffff",
           userSelect: "none",
           cursor: "pointer",
         }
@@ -52,7 +54,7 @@ const ButtonWrapper_ = styled.button<T_STYLED_THEME<ButtonProps>>(
   ({ theme, ...props }) => {
     const sizes =
       theme?.theme?.[theme.currentTheme]?.Button?.sizes?.[props.size || ""];
-    if (sizes?.removeDefaultStyling) return {};
+    if ((sizes as any)?.removeDefaultStyling) return {};
     switch (props.size) {
       case "xs":
         return {
@@ -125,18 +127,48 @@ const ButtonWrapper_ = styled.button<T_STYLED_THEME<ButtonProps>>(
 
   // color
   ({ theme, ...props }) => {
-    if (props.color !== "default") return {};
-
     const color =
-      theme?.theme?.[theme.currentTheme]?.colors?.[props.color || ""] ||
-      _defaultColors.primary;
+      theme?.theme?.[theme.currentTheme]?.colors?.[props.colorScheme || ""] ||
+      _defaultColors[props.colorScheme || ""];
 
-    return {
-      backgroundColor: color?.main,
-      "&:hover": {
-        backgroundColor: color?.main,
-      },
-    };
+    switch (props.variant) {
+      case "default":
+        return {
+          backgroundColor: color?.main,
+          color: "#ffffff",
+          "&:hover": {
+            backgroundColor: color?.hover,
+          },
+          "&:active": {
+            backgroundColor: color?.active,
+          },
+        };
+      case "ghost":
+        return {
+          backgroundColor: "transparent",
+          color: "#2a2c2f",
+          "&:hover": {
+            backgroundColor: "#f0f0f1",
+          },
+          "&:active": {
+            backgroundColor: "#e1e2e4",
+          },
+        };
+      case "outlined":
+        return {
+          boxShadow: `inset 0 0 0 1px ${color?.main}`,
+          color: color?.main,
+          background: "transparent",
+          "&:hover": {
+            backgroundColor: alpha(color?.hover!, 0.1),
+          },
+          "&:active": {
+            backgroundColor: alpha(color?.hover!, 0.16),
+          },
+        };
+      default:
+        return;
+    }
   }
 );
 

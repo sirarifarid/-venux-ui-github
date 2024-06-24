@@ -10,7 +10,7 @@ type ColorsGen<T extends string> = {
 };
 
 export type Colors = Partial<
-  ColorsGen<"primary" | "secondary" | "error" | "success" | "warning" | "info">
+  ColorsGen<"primary" | "red" | "green" | "orange" | "blue">
 > & { [props: string & {}]: Partial<ColorShades> };
 
 type T_OVERRIDE_STYLE = {
@@ -48,7 +48,9 @@ export type ThemeProps = {
         defaultProps?: ButtonDefaultProps<
           "all" | "default" | "outlined" | "ghost"
         > & {
-          [props: string]: ButtonOverrideStyles | undefined;
+          [props: string]:
+            | Partial<ComponentProps<typeof ButtonWrapper_>>
+            | undefined;
         };
         overrideStyles?: ButtonOverrideStylesOptions<
           "default" | "outlined" | "ghost"
@@ -56,9 +58,7 @@ export type ThemeProps = {
           [props: string]: ButtonOverrideStyles | undefined;
         };
         sizes?: ButtonSizes<"xs" | "sm" | "md" | "lg" | "xl"> & {
-          [props: string]:
-            | { styles?: SxProps; removeDefaultStyling?: boolean }
-            | undefined;
+          [props: string]: { styles?: SxProps } | undefined;
         };
       };
       globalStyles?: SxProps;
@@ -69,7 +69,8 @@ export type ThemeProps = {
 export type RipplesAttr = {
   top: number;
   left: number;
-  size: number;
+  width: number;
+  height: number;
 };
 
 export type ColorShades = {
@@ -84,5 +85,5 @@ export type ColorShades = {
   800: string;
   900: string;
   hover: string;
-  focus: string;
+  active: string;
 };

@@ -1,5 +1,5 @@
 import { useDebounce } from "@uidotdev/usehooks";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { RipplesAttr } from "../types/@types";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -10,21 +10,31 @@ const rippleKeyframes = keyframes({
   "100%": { scale: "3", opacity: "0" },
 });
 
-const RippleSpan_ = styled.span({
-  display: "inline-block",
-  position: "absolute",
-  borderRadius: "9999px",
-  pointerEvents: "none",
-  animation: rippleKeyframes + " 0.8s 1 linear forwards",
-});
+const RippleSpan_ = styled.span<{ duration: number }>(
+  {
+    display: "inline-block",
+    position: "absolute",
+    borderRadius: "9999px",
+    pointerEvents: "none",
+  },
+  (props) => ({
+    animation: `${rippleKeyframes} ${props.duration}ms 1 linear forwards`,
+  })
+);
 
 export const useRipple = <T extends HTMLElement>(
   ref: React.RefObject<T>,
   disable?: boolean,
   color?: string,
-  rippleRenderer?: (props: RipplesAttr) => JSX.Element
+  rippleRenderer?: (props: Partial<RipplesAttr>) => JSX.Element,
+  rippleDuration?: number
 ) => {
   const [ripples, setRipples] = useState<RipplesAttr[]>([]);
+  rippleRenderer &&
+    rippleRenderer({})?.type === Fragment &&
+    console.warn(
+      "Fragments are not supported as a ripple renderer. Please provide a function that returns a React element."
+    );
 
   useEffect(() => {
     if (ref?.current && !disable) {
@@ -39,7 +49,8 @@ export const useRipple = <T extends HTMLElement>(
           {
             top: e.clientY - top - diameter / 2,
             left: e.clientX - left - diameter / 2,
-            size: diameter,
+            height: diameter,
+            width: diameter,
           },
         ]);
       };
@@ -52,7 +63,13 @@ export const useRipple = <T extends HTMLElement>(
     }
   }, [disable, ref, ripples]);
 
-  const deb = useDebounce(ripples, 800);
+  const deb = useDebounce(
+    ripples,
+    rippleDuration ||
+      (rippleRenderer
+        ? rippleRenderer({})?.props?.["date-ripple-duration"]
+        : 800)
+  );
 
   useEffect(() => {
     if (deb.length) {
@@ -62,20 +79,22 @@ export const useRipple = <T extends HTMLElement>(
 
   return disable
     ? []
-    : ripples.map((value, i) =>
-        rippleRenderer ? (
-          rippleRenderer(value)
-        ) : (
-          <RippleSpan_
-            key={"ripple" + i}
-            style={{
-              left: value.left,
-              top: value.top,
-              width: value.size,
-              height: value.size,
-              background: color || "#fff",
-            }}
-          />
-        )
-      );
+    : ripples.map((value, i) => (
+        <Fragment key={"a" + i}>
+          {rippleRenderer ? (
+            rippleRenderer(value)
+          ) : (
+            <RippleSpan_
+              duration={rippleDuration || 800}
+              style={{
+                left: value.left,
+                top: value.top,
+                width: value.width,
+                height: value.height,
+                background: color || "#fff",
+              }}
+            />
+          )}
+        </Fragment>
+      ));
 };

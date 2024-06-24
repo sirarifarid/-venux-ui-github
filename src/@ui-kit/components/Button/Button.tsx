@@ -4,36 +4,32 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import { ButtonProps } from "./@types";
 import { LoadingIcon } from "../LoadingIcon/LoadingIcon";
 import { useRipple } from "../../hooks/useRipple";
 import { safeObj } from "../../../utils/safeObj";
 import { useTheme } from "../../hooks";
 import { ButtonWrapper_, LoadingWrapper_ } from "./button.styled";
+import { _defaultButtonProps } from "./_default";
+import { _defaultColors } from "../../provider/_default";
 
 const Button = forwardRef<
   HTMLButtonElement,
   ComponentProps<typeof ButtonWrapper_>
 >((_props, _ref) => {
   const [theme] = useTheme();
-
   const props = {
-    ...{ variant: "default", color: "default", size: "md" },
-    ...safeObj(theme?.theme?.[theme.currentTheme]?.Button?.defaultProps),
+    ..._defaultButtonProps,
+    ...safeObj(theme?.theme?.[theme.currentTheme]?.Button?.defaultProps?.all),
+    ...safeObj(
+      theme?.theme?.[theme.currentTheme]?.Button?.defaultProps?.[
+        _props.variant || _defaultButtonProps.variant
+      ]
+    ),
     ...safeObj(_props),
   } as typeof _props;
 
-  const {
-    children,
-    ripple,
-    startIcon,
-    endIcon,
-    isLoading,
-    onClick,
-    rippleColor,
-    rippleRenderer,
-    ...rest
-  } = props;
+  const { children, ripple, startIcon, endIcon, isLoading, onClick, ...rest } =
+    props;
 
   const ref = useRef<HTMLButtonElement>(null);
 
@@ -42,8 +38,18 @@ const Button = forwardRef<
   const ripples = useRipple(
     ref,
     !ripple && isLoading,
-    rippleColor,
-    rippleRenderer
+    props.rippleColor ||
+      (props.variant === "outlined"
+        ? (
+            theme?.theme?.[theme.currentTheme]?.colors?.[
+              props.colorScheme || ""
+            ] || _defaultColors[props.colorScheme || ""]
+          )?.main
+        : props.variant === "ghost"
+        ? "#b4b6bb"
+        : ""),
+    props.rippleRenderer,
+    props.rippleDuration
   );
 
   const handleClick = (
