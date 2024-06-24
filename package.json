@@ -1,7 +1,6 @@
 {
   "name": "@venux-ui/react",
-  "private": true,
-  "version": "1.0.0@beta",
+  "version": "1.0.0-beta",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
