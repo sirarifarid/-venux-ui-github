@@ -1,9 +1,6 @@
 import { SxProps, RipplesAttr, ThemeProps } from "../@ui-kit/types/@types";
 
-export type T_STYLED<T> = T & { sx?: SxProps };
-
 export type T_DEFINED_STYLED = {
-  sx?: SxProps;
   noDefaultStyling?: boolean;
 };
 

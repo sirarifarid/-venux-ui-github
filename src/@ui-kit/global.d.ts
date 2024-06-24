@@ -1,5 +1,5 @@
 import { CSSObject } from "@emotion/react";
-import { SxProps } from "./@ui-kit/types";
+import { SxProps } from "./types";
 
 interface MyTheme {}
 

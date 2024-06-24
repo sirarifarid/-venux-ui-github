@@ -1,4 +1,3 @@
-import { ButtonProps } from "../components/Button";
 import { CSSObject } from "@emotion/react";
 import { ComponentProps } from "react";
 import { ButtonWrapper_ } from "../components/Button/button.styled";

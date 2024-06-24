@@ -1,11 +1,25 @@
 import styled from "@emotion/styled";
 import { safeCssObj, safeCssObjOn } from "../../../utils/safeObj";
 import { SxProps } from "../../types/@types";
-import { ButtonProps } from "./@types";
 import { _defaultColors } from "../../provider/_default";
-import { T_STYLED_THEME } from "../../../@types/@types";
+import {
+  T_DEFAULT_BUTTON_PROPS,
+  T_DEFINED_STYLED,
+  T_STRING_GENER,
+  T_STYLED_THEME,
+} from "../../../@types/@types";
 import { unit } from "../../utils/units";
 import { alpha } from "../../utils/alpha";
+
+type ButtonProps = T_DEFINED_STYLED &
+  T_DEFAULT_BUTTON_PROPS & {
+    startIcon?: React.ReactNode;
+    endIcon?: React.ReactNode;
+    rippleDuration?: number;
+    variant?: "default" | "outlined" | "ghost" | (string & {});
+    colorScheme?: keyof typeof _defaultColors;
+    size?: T_STRING_GENER<"xs" | "sm" | "md" | "lg" | "xl">;
+  };
 
 const ButtonWrapper_ = styled.button<T_STYLED_THEME<ButtonProps>>(
   // default
